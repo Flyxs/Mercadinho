@@ -5,7 +5,7 @@ data_atual = datetime.today().strftime('%d-%m-%Y')
 hora_atual = datetime.now().strftime('%H:%M:%S')
 
 
-conexao = sqlite3.connect('app/controllers/mercadinho.db')
+conexao = sqlite3.connect('app/controllers/db/mercadinho.db')
 cursor = conexao.cursor()
 
 cursor.execute('''
@@ -14,7 +14,8 @@ CREATE TABLE IF NOT EXISTS produtos (
     nome TEXT NOT NULL,
     preco_venda REAL NOT NULL,
     preco_compra REAL NOT NULL,
-    quantidade INTEGER DEFAULT 0
+    quantidade INTEGER DEFAULT 0,
+    categoria TEXT NOT NULL DEFAULT 'Sem categoria'
 );
 ''')
 
@@ -72,7 +73,7 @@ conexao.close()
 #===============================================================================================================================
 class database:
     def __init__(self):
-        self.conexao = sqlite3.connect('app/controllers/mercadinho.db')
+        self.conexao = sqlite3.connect('app/controllers/db/mercadinho.db')
         self.cursor = self.conexao.cursor()
         
     def close(self):
@@ -107,9 +108,9 @@ class addinfo(database):
     def __init__(self):
         super().__init__()
         
-    def add_produto_novo(self,nome,preco_venda,preco_compra):
+    def add_produto_novo(self,nome,preco_venda,preco_compra,categoria):
         try:
-            self.cursor.execute('INSERT INTO produtos (nome, preco_venda, preco_compra) VALUES (?,?,?)',(nome,preco_venda,preco_compra))
+            self.cursor.execute('INSERT INTO produtos (nome, preco_venda, preco_compra, categoria) VALUES (?,?,?,?)',(nome,preco_venda,preco_compra, categoria))
             self.commit()
         except sqlite3.OperationalError:
             print('Erro ao cadastrar produto')

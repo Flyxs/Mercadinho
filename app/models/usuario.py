@@ -32,7 +32,8 @@ class adm(funcionario):
         
 #---------------------------------------------------------------------------------
         
-    def adicionar_produto_novo(self, nome, preco_venda, preco_compra):
-        novo_produto = produto(nome, preco_venda, preco_compra)
-        addinfo().add_produto_novo(novo_produto.nome,novo_produto.preco_venda,novo_produto.preco_compra)
+    def adicionar_produto_novo(self, nome, preco_venda, preco_compra, item):
+        catalogo = ['Alimentos','Higiene','Limpeza','Outros']
+        novo_produto = produto(nome, preco_venda, preco_compra, catalogo[item])
+        addinfo().add_produto_novo(novo_produto.nome, novo_produto.preco_venda, novo_produto.preco_compra, novo_produto.categoria)
 
