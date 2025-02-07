@@ -18,14 +18,34 @@ def serve_static(filepath):
 def helper(info= None):
     return ctl.render('helper')
 
-
 #-----------------------------------------------------------------------------
 # Suas rotas aqui:
 
+@app.route('/', method=['GET'])
+def index():
+    return ctl.render('index')
+
+
+@app.route('/cadastro', method=['GET', 'POST'])
+def cadastro():
+    return ctl.render('cadastro')
+
+@app.route('/login', method=['GET', 'POST'])
+def login():
+    return ctl.render('login')
+
+# @app.route('/logout', method='POST')
+# def logout():
+#     return ctl.logout()
+
+
+
+
+
+
 
 
 #-----------------------------------------------------------------------------
-
 
 if __name__ == '__main__':
 

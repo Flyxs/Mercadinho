@@ -22,24 +22,38 @@ CREATE TABLE IF NOT EXISTS produtos (
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS funcionarios (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    seccion_id TEXT,
+    trabalhador BOOLEAN DEFAULT 1,
     nome TEXT NOT NULL,
-    email TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
     cpf TEXT NOT NULL,
-    salario REAL DEFAULT 1700,
     senha TEXT NOT NULL,
-    seccion_id TEXT
+    salario REAL DEFAULT 1700
 );
 ''')
 
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS adms (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    seccion_id TEXT,
+    trabalhador BOOLEAN DEFAULT 2,
     nome TEXT NOT NULL,
-    email TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
     cpf TEXT NOT NULL,
-    salario REAL DEFAULT 3000,
     senha TEXT NOT NULL,
-    seccion_id TEXT
+    salario REAL DEFAULT 3000
+);
+''')
+
+cursor.execute('''
+CREATE TABLE IF NOT EXISTS clientes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    seccion_id TEXT,
+    trabalhador BOOLEAN DEFAULT 0,
+    nome TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    cpf TEXT NOT NULL,
+    senha TEXT NOT NULL
 );
 ''')
 
@@ -89,19 +103,45 @@ class getinfo(database):
         
     def get_produtos(self,id):
         self.cursor.execute('SELECT * FROM produtos WHERE id = ?', (id,))
-        produto = self.cursor.fetchall()
+        produto = self.cursor.fetchone()
         return produto
     
-    def get_usuario(self,id):
-        self.cursor.execute('SELECT * FROM funcionarios WHERE id = ?', (id,))
-        usuario = self.cursor.fetchall()
+    def get_funcionario(self,email):
+        self.cursor.execute('SELECT * FROM funcionarios WHERE email = ?', (email,))
+        usuario = self.cursor.fetchone()
         return usuario
     
-    def get_adm(self,id):
-        self.cursor.execute('SELECT * FROM adms WHERE id = ?', (id,))
-        adm = self.cursor.fetchall()
+    def get_adm(self,email):
+        self.cursor.execute('SELECT * FROM adms WHERE email = ?', (email,))
+        adm = self.cursor.fetchone()
         return adm
     
+    def get_cliente(self,email):
+        self.cursor.execute('SELECT * FROM clientes WHERE email = ?', (email,))
+        cliente = self.cursor.fetchone()
+        return cliente
+    
+    def get_user(self, email):
+        user = None
+        self.cursor.execute('SELECT * FROM funcionarios WHERE email = ?', (email,))
+        user = self.cursor.fetchone()
+        
+        if user is None:
+            self.cursor.execute('SELECT * FROM adms WHERE email = ?', (email,))
+            user = self.cursor.fetchone()
+        if user is None:
+            self.cursor.execute('SELECT * FROM clientes WHERE email = ?', (email,))
+            user = self.cursor.fetchone()
+        
+        return user
+    
+    def autenticar(self,email,senha):
+        user = self.get_user(email)
+        if user[4] == email and user[6] == senha:
+            return True
+        else:
+            return False
+     
     
 #===============================================================================================================================
 class addinfo(database):
@@ -193,6 +233,7 @@ class addinfo(database):
         try:
             self.cursor.execute('INSERT INTO funcionarios (nome, email, cpf, senha) VALUES (?,?,?,?)',(nome,email,cpf,senha))
             self.conexao.commit()
+
         except sqlite3.OperationalError:
             print('Erro ao cadastrar funcionario')
         
@@ -200,5 +241,13 @@ class addinfo(database):
         try:
             self.cursor.execute('INSERT INTO adms (nome, email, cpf, senha) VALUES (?,?,?,?)',(nome,email,cpf,senha))
             self.commit()
+            
         except sqlite3.OperationalError:
             print('Erro ao cadastrar adm')
+            
+    def add_cliente(self,nome,email,cpf,senha):
+        try:
+            self.cursor.execute('INSERT INTO clientes (nome, email, cpf, senha) VALUES (?,?,?,?)',(nome,email,cpf,senha))
+            self.commit()
+        except sqlite3.OperationalError:
+            print('Erro ao cadastrar cliente')
