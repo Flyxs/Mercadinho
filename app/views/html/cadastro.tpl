@@ -25,6 +25,5 @@
 
         <button type="submit">Cadastrar</button>        
     </form>
-    %end
 </body>
 </html>

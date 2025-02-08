@@ -34,9 +34,13 @@ def cadastro():
 def login():
     return ctl.render('login')
 
-# @app.route('/logout', method='POST')
-# def logout():
-#     return ctl.logout()
+@app.route('/logout', method='POST')
+def logout():
+    return ctl.logout()
+
+@app.route('/dashboard_c', method=['GET', 'POST'])
+def dashboard_c():
+    return ctl.render('dashboard_c')
 
 
 

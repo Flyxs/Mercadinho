@@ -16,8 +16,12 @@ pessoa2.adicionar_produto_novo('melancia', 6.0, 3.0, 0)
 
 # pessoa2.vender_produto(1, 4)
 
-pessoa2.adicionar_funcionario(pessoa.nome, pessoa.email, pessoa.cpf, pessoa.senha)
+# pessoa2.adicionar_funcionario(pessoa.nome, pessoa.email, pessoa.cpf, pessoa.senha)
 
-pessoa2.adicionar_adm(pessoa2.nome, pessoa2.email, pessoa2.cpf, pessoa2.senha)
+# pessoa2.adicionar_adm(pessoa2.nome, pessoa2.email, pessoa2.cpf, pessoa2.senha)
 
-pessoa2.adicionar_cliente(pessoa3.nome, pessoa3.email, pessoa3.cpf, pessoa3.senha)
+# pessoa2.adicionar_cliente(pessoa3.nome, pessoa3.email, pessoa3.cpf, pessoa3.senha)
+
+chave = {'nome': 'felipe', 'email': 'felypecarrijo19@gmail.com', 'cpf': '04055430183', 'senha': 'felipe19'}
+
+print(chave['nome'])

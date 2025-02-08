@@ -3,32 +3,33 @@ from app.models.itens import produto
 
 
 class cliente:
-    def __init__(self, seccion_id, trabalhador, nome, email, cpf, senha):
-        self.seccion_id = seccion_id
+    def __init__(self, id, trabalhador, nome, email, cpf, senha):
+        self.id = id
+        self.trabalhador = trabalhador        
         self.nome = nome
         self.email = email
+        self.cpf = cpf        
         self.senha = senha
-        self.cpf = cpf
-        self.trabalhador = trabalhador
+
 
 
 #=================================================================================
 class funcionario(cliente):
-    def __init__(self,seccion_id, trabalhador, nome, email, cpf, senha, salario):
-        super().__init__(seccion_id, trabalhador, nome, email, cpf, senha)
+    def __init__(self, id, trabalhador, nome, email, cpf, senha, salario):
+        super().__init__(id, trabalhador, nome, email, cpf, senha)
         self.salario = salario
 
 #---------------------------------------------------------------------------------
 
-    def vender_produto(self, id, qtd):
-        existencia = getinfo().get_produtos(id)[0]
+    def vender_produto(self, p_id, qtd):
+        existencia = getinfo().get_produtos(p_id)[0]
         if existencia:
             addinfo().sell_produto(id,qtd)
         else:
             print('Produto nao cadastrado')
 
-    def comprar_produto(self, id, qtd):
-        existencia = getinfo().get_produtos(id)[0]
+    def comprar_produto(self, p_id, qtd):
+        existencia = getinfo().get_produtos(p_id)[0]
         if existencia:
             addinfo().buy_produto(id,qtd)
         else:
@@ -40,8 +41,8 @@ class funcionario(cliente):
 
 #=================================================================================
 class adm(funcionario):
-    def __init__(self,seccion_id, trabalhador, nome, email, cpf, senha, salario):
-        super().__init__(seccion_id, trabalhador,nome, email, cpf, senha, salario)
+    def __init__(self, id, trabalhador, nome, email, cpf, senha, salario):
+        super().__init__(id, trabalhador, nome, email, cpf, senha, salario)
         
 #---------------------------------------------------------------------------------
         

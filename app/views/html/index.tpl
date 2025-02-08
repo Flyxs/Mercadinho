@@ -3,38 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="static/css/index.css">
+    <script src="../../static/js/index.js"></script>
     <title>Página Inicial</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 100px;
-        }
 
-        h1 {
-            color: #4CAF50;
-        }
-
-        .buttons {
-            margin-top: 30px;
-        }
-
-        .btn {
-            padding: 10px 20px;
-            font-size: 16px;
-            color: white;
-            background-color: #4CAF50;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 0 15px;
-            text-decoration: none;
-        }
-
-        .btn:hover {
-            background-color: #45a049;
-        }
-    </style>
 </head>
 <body>
 
