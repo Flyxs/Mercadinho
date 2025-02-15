@@ -24,26 +24,15 @@ CREATE TABLE IF NOT EXISTS produtos (
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS funcionarios (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_type TEXT DEFAULT "trabalhador",
+    user_type TEXT DEFAULT "funcionario",
     nome TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
     cpf TEXT NOT NULL,
     senha TEXT NOT NULL,
-    salario REAL DEFAULT 1700
+    salario REAL DEFAULT 0.0
 );
 ''')
 
-cursor.execute('''
-CREATE TABLE IF NOT EXISTS adms (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_type TEXT DEFAULT "adm",
-    nome TEXT NOT NULL,
-    email TEXT UNIQUE NOT NULL,
-    cpf TEXT NOT NULL,
-    senha TEXT NOT NULL,
-    salario REAL DEFAULT 3000
-);
-''')
 
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS clientes (
@@ -120,17 +109,23 @@ class getinfo(database):
         produto = self.cursor.fetchone()
         return produto
     
+    def get_all_produtos(self):
+        try:
+            self.cursor.execute('SELECT * FROM produtos')
+            produtos = self.cursor.fetchall()
+            print(produtos)
+            return produtos if produtos else []
+        except Exception as e:
+            print('Erro ao buscar produtos:', e) 
+            return []
+    
+    
     
     def get_funcionario(self,email):
         self.cursor.execute('SELECT * FROM funcionarios WHERE email = ?', (email,))
         usuario = self.cursor.fetchone()
         return usuario
     
-    
-    def get_adm(self,email):
-        self.cursor.execute('SELECT * FROM adms WHERE email = ?', (email,))
-        adm = self.cursor.fetchone()
-        return adm
     
     
     def get_cliente(self,email):
@@ -144,9 +139,6 @@ class getinfo(database):
         self.cursor.execute('SELECT * FROM funcionarios WHERE email = ?', (email,))
         user = self.cursor.fetchone()
         
-        if user is None:
-            self.cursor.execute('SELECT * FROM adms WHERE email = ?', (email,))
-            user = self.cursor.fetchone()
         if user is None:
             self.cursor.execute('SELECT * FROM clientes WHERE email = ?', (email,))
             user = self.cursor.fetchone()
@@ -167,7 +159,6 @@ class getinfo(database):
         try:
             session_id = request.get_cookie('session_id')
             if not session_id:
-                addinfo().delete_session(session_id)
                 return None
 
             session = getinfo().get_session(session_id)
@@ -199,15 +190,21 @@ class getinfo(database):
             print('Erro ao verificar sessão:', e)
             return None
 
+
     def get_user_from_session_id(self, session_id):
         try:
             self.cursor.execute("SELECT user_id, user_type FROM sessions WHERE session_id = ?", (session_id,))
             user_id = self.cursor.fetchone()
             
             if user_id:
-                self.cursor.execute(f'SELECT * FROM {user_id[1]} WHERE id = ?', (user_id[0],))
+                self.cursor.execute(f'SELECT * FROM clientes WHERE id = ?', (user_id[0],))
                 user = self.cursor.fetchone()
-                return user
+                if user:    
+                    return user
+                elif not user:
+                    self.cursor.execute(f'SELECT * FROM funcionarios WHERE id = ?', (user_id[0],))
+                    user = self.cursor.fetchone()
+                    return user
         except sqlite3.OperationalError as e:
             print('Erro ao verificar sessão:', e)
             return None
@@ -222,7 +219,8 @@ class addinfo(database):
         
     def add_produto_novo(self,nome,preco_venda,preco_compra,categoria):
         try:
-            self.cursor.execute('INSERT INTO produtos (nome, preco_venda, preco_compra, categoria) VALUES (?,?,?,?)',(nome,preco_venda,preco_compra, categoria))
+            catalogo = ['Alimento', 'Limpesa', 'Saude']
+            self.cursor.execute('INSERT INTO produtos (nome, preco_venda, preco_compra, categoria) VALUES (?,?,?,?)',(nome,preco_venda,preco_compra, catalogo[categoria]))
             self.commit()
         except sqlite3.OperationalError:
             print('Erro ao cadastrar produto')
@@ -243,13 +241,9 @@ class addinfo(database):
             
     def rm_produto(self,id,quantidade):
         try:
-            id = int(id)
-            quantidade = int(quantidade)
-            self.cursor.execute('SELECT quantidade FROM produtos WHERE id = ?', (id,))
-            qtd = self.cursor.fetchone()[0]
-            qtd = qtd - quantidade
-            self.cursor.execute('UPDATE produtos SET quantidade = ? WHERE id = ?',(qtd,id))
-            self.commit()
+            if quantidade > 0:
+                self.cursor.execute('UPDATE produtos SET quantidade = quantidade - ? WHERE id = ?', (quantidade, id))
+                self.commit()
         except sqlite3.OperationalError:
             print('Erro ao remover produto')
             
@@ -279,28 +273,24 @@ class addinfo(database):
             
     def sell_produto(self,id,quantidade):
         try:
-            self.rm_produto(id,quantidade)
-            self.cursor.execute('SELECT quantidade FROM produtos WHERE id = ?', (id,))
-            qtd = self.cursor.fetchone()[0]
-            if qtd >= 0:
-                self.cursor.execute('SELECT preco_venda FROM produtos WHERE id = ?', (id,))
-                preco = self.cursor.fetchone()[0]
-                preco = preco * quantidade
-                
-                self.cursor.execute('SELECT * FROM saldo')
-                resultado = self.cursor.fetchone()
-                receita = resultado[1]
-                saldo = resultado[2]
-                receita = receita + preco
-                saldo = saldo + preco
-                
-                self.cursor.execute('INSERT INTO transacoes (data,horario,valor,tipo) VALUES (?,?,?,?)',(data_atual,hora_atual,preco,'Venda'))
-                self.cursor.execute('UPDATE saldo SET total = ?, receita = ? WHERE ROWID = 1', (saldo, receita))
-                
-                self.commit()
-            else:
-                self.add_produto(id,quantidade)
-                print('Quantidade insuficiente')
+            self.cursor.execute('SELECT preco_venda FROM produtos WHERE id = ?', (id,))
+            preco = self.cursor.fetchone()[0]
+            preco = preco * quantidade
+            
+            self.cursor.execute('SELECT * FROM saldo')
+            resultado = self.cursor.fetchone()
+            receita = resultado[1]
+            saldo = resultado[2]
+            receita = receita + preco
+            saldo = saldo + preco
+            
+            self.cursor.execute('INSERT INTO transacoes (data,horario,valor,tipo) VALUES (?,?,?,?)',(data_atual,hora_atual,preco,'Venda'))
+            self.cursor.execute('UPDATE saldo SET total = ?, receita = ? WHERE ROWID = 1', (saldo, receita))
+            
+            self.commit()
+            self.add_produto(id,quantidade)
+            print('Quantidade insuficiente')
+            
         except sqlite3.Error as e:
             print('Erro ao vender produto', e)
                  
@@ -316,7 +306,7 @@ class addinfo(database):
         
     def add_adm(self,nome,email,cpf,senha):
         try:
-            self.cursor.execute('INSERT INTO adms (nome, email, cpf, senha) VALUES (?,?,?,?)',(nome,email,cpf,senha))
+            self.cursor.execute('INSERT INTO funcionarios (user_type, nome, email, cpf, senha) VALUES (?,?,?,?)',('adm',nome,email,cpf,senha))
             self.commit()
             
         except sqlite3.OperationalError:
@@ -329,6 +319,7 @@ class addinfo(database):
             self.commit()
         except sqlite3.OperationalError:
             print('Erro ao cadastrar cliente')
+            
             
 #------------------------------------{Area de cookie}------------------------------------#
             
@@ -343,7 +334,7 @@ class addinfo(database):
     def create_session(self,user_id, user_type):
         try:
             session_id = str(uuid.uuid4())
-            expires_at = (datetime.now() + timedelta(hours=4)).strftime('%Y-%m-%d %H:%M:%S')
+            expires_at = (datetime.now() + timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S')
 
             self.add_session(user_id, user_type, session_id, expires_at)
             response.set_cookie('session_id', session_id, max_age=3600)
@@ -357,7 +348,8 @@ class addinfo(database):
     def delete_session(self,session_id):
         try:
             self.cursor.execute('DELETE FROM sessions WHERE session_id = ?', (session_id,))
+            response.delete_cookie('session_id')
             self.commit()
         except sqlite3.OperationalError as e:
             print('Erro ao deletar sessão:', e)
-
+            

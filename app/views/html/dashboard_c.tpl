@@ -9,12 +9,12 @@
 </head>
 
 <body>
-    <h1>{{nome}}</h1>
+    <h1>{{user[2]}}</h1>
     <br>
     <form action="/logout" method="POST">
         <button type="submit" aria-label="Sair da sessão">Sair</button>
     </form>
-    <form action="/produtos" method="post">
+    <form action="/produtos" method="GET">
         <button type="submit" aria-label="Ir para produtos">Produtos</button>
     </form>
 </body>

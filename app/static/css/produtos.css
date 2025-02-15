@@ -1,0 +1,68 @@
+/* 📌 Estiliza a área que contém todos os produtos */
+.produtos_all {
+    border: 2px solid #333;
+    padding: 20px;
+    width: fit-content;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+    margin: 20px auto; /* Centraliza na tela */
+}
+
+/* 📌 Estiliza cada produto individualmente */
+.produto {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* 📌 Botões de incrementar e decrementar */
+button {
+    padding: 8px 12px;
+    margin: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 4px;
+    transition: background 0.2s ease-in-out;
+}
+
+/* 📌 Botão de adicionar ao carrinho */
+button[type="submit"] {
+    background-color: #28a745;
+    color: white;
+    font-weight: bold;
+}
+
+button.incrementar {
+    background-color: #007bff;
+    color: white;
+}
+
+button.incrementar:hover {
+    background-color: #0056b3;
+}
+
+button.decrementar {
+    background-color: #dc3545;
+    color: white;
+}
+
+button.decrementar:hover {
+    background-color: #a71d2a;
+}
+
+/* 📌 Estiliza o número da quantidade */
+span[id^="quantidade_"] {
+    display: inline-block;
+    padding: 5px 10px;
+    min-width: 30px;
+    text-align: center;
+    background-color: #f1f1f1;
+    border-radius: 4px;
+    font-weight: bold;
+    border: 1px solid #ccc;
+}
