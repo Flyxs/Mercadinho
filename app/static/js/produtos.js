@@ -1,62 +1,16 @@
-document.addEventListener("DOMContentLoaded", function () {
-    // Seleciona todos os botões de incrementar
-    document.querySelectorAll(".incrementar").forEach(button => {
-        button.addEventListener("click", function () {
-            let id = this.getAttribute("data-id");
-            let quantidadeSpan = document.getElementById("quantidade_" + id);
-            let inputQuantidade = document.getElementById("input_quantidade_" + id);
-            let quantidadeMaxima = parseInt(document.getElementById("quantidade_disponivel_" + id).textContent); // Pega o estoque disponível
-
-            let quantidade = parseInt(quantidadeSpan.textContent);
-            if (quantidade < quantidadeMaxima) {
-                quantidade++; // Incrementa apenas se não atingir o limite
-                quantidadeSpan.textContent = quantidade;
-                inputQuantidade.value = quantidade;
-            }
-        });
-    });
-
-    // Seleciona todos os botões de decrementar
-    document.querySelectorAll(".decrementar").forEach(button => {
-        button.addEventListener("click", function () {
-            let id = this.getAttribute("data-id");
-            let quantidadeSpan = document.getElementById("quantidade_" + id);
-            let inputQuantidade = document.getElementById("input_quantidade_" + id);
-
-            let quantidade = parseInt(quantidadeSpan.textContent);
-            if (quantidade > 0) {
-                quantidade--; // Decrementa apenas se for maior que 0
-                quantidadeSpan.textContent = quantidade;
-                inputQuantidade.value = quantidade;
-            }
-        });
-    });
-});
-
-
-// Função para diminuir a quantidade
-function diminui(produtoId) {
-    var quantidadeSpan = document.getElementById("quantidade_" + produtoId);
-    var quantidadeAtual = parseInt(quantidadeSpan.textContent);
-    if (quantidadeAtual > 0) {
-        quantidadeSpan.textContent = quantidadeAtual - 1;
-    }
-}
-
-// Função para aumentar a quantidade
-function aumenta(produtoId) {
-    var quantidadeSpan = document.getElementById("quantidade_" + produtoId);
-    var quantidadeAtual = parseInt(quantidadeSpan.textContent);
-    var quantidadeDisponivel = parseInt(document.getElementById("quantidade_disponivel_" + produtoId).textContent);
+function atualizarQuantidade(delta, produtoId) {
+    let quantidadeElem = document.getElementById(`quantidade_${produtoId}`);
+    let quantidadeInput = document.getElementById(`input_quantidade_${produtoId}`);
+    let quantidadeDisponivel = parseInt(document.getElementById(`quantidade_disponivel_${produtoId}`).innerText, 10);
     
-    if (quantidadeAtual < quantidadeDisponivel) {
-        quantidadeSpan.textContent = quantidadeAtual + 1;
-    }
-}
+    let novaQuantidade = parseInt(quantidadeElem.innerText, 10) + delta;
 
-// Função para atualizar o valor no input hidden antes de enviar o formulário
-function atualizarQuantidade(produtoId) {
-    var quantidadeSpan = document.getElementById("quantidade_" + produtoId);
-    var quantidadeInput = document.getElementById("quantidade_input_" + produtoId);
-    quantidadeInput.value = quantidadeSpan.textContent;
+    if (novaQuantidade < 0) {
+        novaQuantidade = 0; // Evita valores menores que 0
+    } else if (novaQuantidade > quantidadeDisponivel) {
+        novaQuantidade = quantidadeDisponivel; // Evita ultrapassar o estoque máximo
+    }
+
+    quantidadeElem.innerText = novaQuantidade;
+    quantidadeInput.value = novaQuantidade; // Atualiza o input escondido
 }

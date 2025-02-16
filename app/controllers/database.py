@@ -63,6 +63,12 @@ CREATE TABLE IF NOT EXISTS saldo (
 );
 ''')
 
+cursor.execute('SELECT COUNT(*) FROM saldo')
+resultado = cursor.fetchone()
+if resultado[0] == 0:
+    cursor.execute('INSERT INTO saldo (despesa, receita) VALUES (0, 0)')
+
+
 cursor.execute('''CREATE TABLE IF NOT EXISTS sessions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
@@ -73,10 +79,17 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS sessions (
 );
 ''')
 
-cursor.execute('SELECT COUNT(*) FROM saldo')
-resultado = cursor.fetchone()
-if resultado[0] == 0:
-    cursor.execute('INSERT INTO saldo (despesa, receita) VALUES (0, 0)')
+
+cursor.execute('''
+CREATE TABLE IF NOT EXISTS carrinhos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    produto_id INTEGER,
+    quantidade INTEGER,
+    FOREIGN KEY (user_id) REFERENCES clientes (id),
+    FOREIGN KEY (produto_id) REFERENCES produtos (id)
+);
+''')
 
 conexao.commit()
 conexao.close()
@@ -103,6 +116,7 @@ class getinfo(database):
     def __init__(self):
         super().__init__()
         
+#------------------------------------{Area de produtos}------------------------------------#        
         
     def get_produtos(self,id):
         self.cursor.execute('SELECT * FROM produtos WHERE id = ?', (id,))
@@ -119,7 +133,7 @@ class getinfo(database):
             print('Erro ao buscar produtos:', e) 
             return []
     
-    
+#------------------------------------{Area de usuario}------------------------------------#
     
     def get_funcionario(self,email):
         self.cursor.execute('SELECT * FROM funcionarios WHERE email = ?', (email,))
@@ -152,6 +166,21 @@ class getinfo(database):
             return True
         else:
             return False
+    
+#------------------------------------{Area de carrinho}------------------------------------#
+    
+    def get_carrinho(self,user_id):
+        try:
+            self.cursor.execute('''
+            SELECT c.produto_id, p.nome, c.quantidade, p.preco_venda FROM carrinhos c JOIN produtos p ON c.produto_id = p.id WHERE c.user_id = ?
+            ''', (user_id,))
+            carrinho = self.cursor.fetchall()
+            return carrinho if carrinho else []
+            
+        except Exception as e:
+            print('Erro ao buscar carrinho:', e) 
+            return []
+
     
 #------------------------------------{Area de cookie}------------------------------------#
 
@@ -216,6 +245,7 @@ class addinfo(database):
     def __init__(self):
         super().__init__()
         
+#------------------------------------{Area de produtos}------------------------------------#
         
     def add_produto_novo(self,nome,preco_venda,preco_compra,categoria):
         try:
@@ -288,12 +318,11 @@ class addinfo(database):
             self.cursor.execute('UPDATE saldo SET total = ?, receita = ? WHERE ROWID = 1', (saldo, receita))
             
             self.commit()
-            self.add_produto(id,quantidade)
-            print('Quantidade insuficiente')
             
         except sqlite3.Error as e:
             print('Erro ao vender produto', e)
                  
+#------------------------------------{Area de usuario}------------------------------------#
                  
     def add_funcionario(self,nome,email,cpf,senha):
         try:
@@ -320,6 +349,27 @@ class addinfo(database):
         except sqlite3.OperationalError:
             print('Erro ao cadastrar cliente')
             
+#------------------------------------{Area de carrinho}------------------------------------#
+    
+    def add_carrinho(self,user_id,produto_id,quantidade):
+        try:
+            self.cursor.execute('SELECT id, quantidade FROM carrinhos WHERE user_id = ? AND produto_id = ?', (user_id,produto_id))
+            carrinho = self.cursor.fetchone()
+            if carrinho:
+                nova_qtd = carrinho[1] + quantidade
+                self.cursor.execute('UPDATE carrinhos SET quantidade = ? WHERE id = ?', (nova_qtd,carrinho[0]))
+            else:
+                self.cursor.execute('INSERT INTO carrinhos (user_id, produto_id, quantidade) VALUES (?,?,?)', (user_id,produto_id,quantidade))
+            self.commit()
+        except sqlite3.OperationalError:
+            print('Erro ao adicionar produto ao carrinho')
+            
+    def remove_carrinho(self,user_id,produto_id):
+        try:
+            self.cursor.execute('DELETE FROM carrinhos WHERE user_id = ? AND produto_id = ?', (user_id,produto_id))
+            self.commit()
+        except sqlite3.OperationalError:
+            print('Erro ao remover produto do carrinho')
             
 #------------------------------------{Area de cookie}------------------------------------#
             

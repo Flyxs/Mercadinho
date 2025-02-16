@@ -135,32 +135,43 @@ class Application():
 
     def produtos(self):
         user = getinfo().check_session()
-        print('usuario encontrado')
+        print('\n usuario encontrado \n', user)
         
         if not user:
             print('redirecionando para login')
             return redirect('/login')
         
         else:
-            carrinho = []
             if request.method == 'GET':
-                print('metodo encontrado')
+                print('\n metodo GET encontrado \n')
                 produtos = getinfo().get_all_produtos()
-                print('produtos encontrados')
-                return template('app/views/html/produtos', produtos=produtos)
+                carrinho = getinfo().get_carrinho(user[0])
+                print('\n produtos encontrados', produtos)
+                print('carrinho encontrado', carrinho, '\n')
+                return template('app/views/html/produtos', produtos=produtos, carrinho=carrinho)
             
             elif request.method == 'POST':
-                print('post encontrado')
+                print('\n metodo POST encontrado \n')
 
                 produto_id = request.forms.get('produto_id')
-                quantidade = int(request.forms.get('quantidade'))
+                quantidade = request.forms.get('quantidade')
+                print('\n produto_id: ', produto_id)
+                print('quantidade: ', quantidade, '\n')
                 
-                carrinho.append({'produto_id': produto_id, 'quantidade': quantidade})   
-                             
-                for info in carrinho:
-                    addinfo().rm_produto(info['produto_id'], info['quantidade'])
+                if not produto_id or not quantidade:
+                    print('\n campo vazio \n')
+                    return redirect('/produtos')
+                
+                try:
+                    quantidade = int(quantidade)
+                except ValueError:
+                    print('\n quantidade invalida \n')
+                    quantidade = 0
+                    return redirect('/produtos')
+                
+                addinfo().add_carrinho(user[0], produto_id, quantidade)
+                addinfo().rm_produto(produto_id, quantidade)
 
-                print(carrinho)
                 
                 return redirect('/produtos')
             
@@ -168,3 +179,44 @@ class Application():
         user = getinfo().check_session()
         if not user:
             return redirect('/login')
+        
+        else:
+            carrinho = getinfo().get_carrinho(user[0])
+            if request.method == 'GET':
+                
+                confirmacao = False
+                total_carrinho = sum(produto[3] * produto[2] for produto in carrinho)
+                
+                if not carrinho:
+                    mensagem = 'Carrinho vazio'
+                else:
+                    mensagem = 'Seu carrinho'
+                    
+                return template('app/views/html/carrinho', carrinho=carrinho, mensagem=mensagem, total=total_carrinho, confirmacao=confirmacao)
+            
+            elif request.method == 'POST':
+                cancelar_carrinho = request.forms.get('cancelar_carrinho')
+                
+                if cancelar_carrinho:
+                    
+                    for item in carrinho:
+                        addinfo().add_produto(item[0], item[2])  # Reabastece o estoque
+                        addinfo().remove_carrinho(user[0], item[0])  # Remove do carrinho
+                    return redirect('/produtos')
+                
+                else:
+                    cancelar_produto = request.forms.get('cancelar_produto')
+                    
+                    if cancelar_produto:
+                        qtd = request.forms.get('quantidade')
+                        addinfo().add_produto(cancelar_produto, qtd)  # Reabastece o estoque
+                        addinfo().remove_carrinho(user[0], cancelar_produto)  # Remove o produto específico
+                        return redirect('/carrinho')
+                    
+                    confirmacao = True
+                    for item in carrinho:
+                        addinfo().sell_produto(item[0], item[2])  # Confirma a venda
+                        addinfo().remove_carrinho(user[0], item[0])  # Remove os produtos do carrinho
+                        
+                    return template('app/views/html/carrinho', carrinho=[], mensagem="Compra confirmada!", total=0)
+
