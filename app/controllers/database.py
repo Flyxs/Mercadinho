@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS produtos (
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS funcionarios (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_type TEXT DEFAULT "funcionario",
+    user_type TEXT,
     nome TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
     cpf TEXT NOT NULL,
@@ -133,6 +133,24 @@ class getinfo(database):
             print('Erro ao buscar produtos:', e) 
             return []
     
+    def get_transacoes(self):
+        try:
+            self.cursor.execute('SELECT * FROM transacoes')
+            transacoes = self.cursor.fetchall()
+            return transacoes if transacoes else []
+        except Exception as e:
+            print('Erro ao buscar transações:', e) 
+            return []
+        
+    def get_saldo(self):
+        try:
+            self.cursor.execute('SELECT * FROM saldo')
+            saldo = self.cursor.fetchone()
+            return saldo
+        except Exception as e:
+            print('Erro ao buscar saldo:', e) 
+            return []
+    
 #------------------------------------{Area de usuario}------------------------------------#
     
     def get_funcionario(self,email):
@@ -140,12 +158,29 @@ class getinfo(database):
         usuario = self.cursor.fetchone()
         return usuario
     
+    def get_all_funcionarios(self):
+        try:
+            self.cursor.execute('SELECT * FROM funcionarios')
+            funcionarios = self.cursor.fetchall()
+            return funcionarios if funcionarios else []
+        except Exception as e:
+            print('Erro ao buscar funcionarios:', e) 
+            return []
     
     
     def get_cliente(self,email):
         self.cursor.execute('SELECT * FROM clientes WHERE email = ?', (email,))
         cliente = self.cursor.fetchone()
         return cliente
+    
+    def get_all_clientes(self):
+        try:
+            self.cursor.execute('SELECT * FROM clientes')
+            clientes = self.cursor.fetchall()
+            return clientes if clientes else []
+        except Exception as e:
+            print('Erro ao buscar clientes:', e) 
+            return []
     
     
     def get_user(self, email):
@@ -226,12 +261,13 @@ class getinfo(database):
             user_id = self.cursor.fetchone()
             
             if user_id:
-                self.cursor.execute(f'SELECT * FROM clientes WHERE id = ?', (user_id[0],))
-                user = self.cursor.fetchone()
-                if user:    
-                    return user
-                elif not user:
-                    self.cursor.execute(f'SELECT * FROM funcionarios WHERE id = ?', (user_id[0],))
+                if user_id[1] == 'cliente':
+                    self.cursor.execute('SELECT * FROM clientes WHERE id = ?', (user_id[0],))
+                    user = self.cursor.fetchone()
+                    if user:
+                        return user
+                elif user_id[1] == 'funcionario':
+                    self.cursor.execute('SELECT * FROM funcionarios WHERE id = ?', (user_id[0],))
                     user = self.cursor.fetchone()
                     return user
         except sqlite3.OperationalError as e:
@@ -249,7 +285,8 @@ class addinfo(database):
         
     def add_produto_novo(self,nome,preco_venda,preco_compra,categoria):
         try:
-            catalogo = ['Alimento', 'Limpesa', 'Saude']
+            catalogo = ['Alimento', 'Limpesa', 'Saude', 'Ferramentas', 'Eletronicos', 'Outros']
+            categoria = int(categoria)
             self.cursor.execute('INSERT INTO produtos (nome, preco_venda, preco_compra, categoria) VALUES (?,?,?,?)',(nome,preco_venda,preco_compra, catalogo[categoria]))
             self.commit()
         except sqlite3.OperationalError:
@@ -277,6 +314,12 @@ class addinfo(database):
         except sqlite3.OperationalError:
             print('Erro ao remover produto')
             
+    def del_produto(self,id):
+        try:
+            self.cursor.execute('DELETE FROM produtos WHERE id = ?', (id,))
+            self.commit()
+        except sqlite3.OperationalError:
+            print('Erro ao deletar produto')
             
     def buy_produto(self,id,quantidade):
         try:
@@ -326,20 +369,20 @@ class addinfo(database):
                  
     def add_funcionario(self,nome,email,cpf,senha):
         try:
-            self.cursor.execute('INSERT INTO funcionarios (nome, email, cpf, senha) VALUES (?,?,?,?)',(nome,email,cpf,senha))
+            self.cursor.execute('INSERT INTO funcionarios (user_type, nome, email, cpf, senha) VALUES (?,?,?,?,?)',('funcionario',nome,email,cpf,senha))
             self.conexao.commit()
 
-        except sqlite3.OperationalError:
-            print('Erro ao cadastrar funcionario')
+        except sqlite3.OperationalError as e:
+            print('Erro ao cadastrar funcionario', e)
         
         
     def add_adm(self,nome,email,cpf,senha):
         try:
-            self.cursor.execute('INSERT INTO funcionarios (user_type, nome, email, cpf, senha) VALUES (?,?,?,?)',('adm',nome,email,cpf,senha))
+            self.cursor.execute('INSERT INTO funcionarios (user_type, nome, email, cpf, senha) VALUES (?,?,?,?,?)',('adm',nome,email,cpf,senha))
             self.commit()
             
-        except sqlite3.OperationalError:
-            print('Erro ao cadastrar adm')
+        except sqlite3.OperationalError as e:
+            print('Erro ao cadastrar adm', e)
             
             
     def add_cliente(self,nome,email,cpf,senha):
@@ -349,6 +392,60 @@ class addinfo(database):
         except sqlite3.OperationalError:
             print('Erro ao cadastrar cliente')
             
+            
+    def remove_user(self, email):
+        try:
+            cliente = getinfo().get_cliente(email)
+            
+            if cliente:
+                self.cursor.execute('DELETE FROM clientes WHERE email = ?', (email,))
+                self.commit()
+                print(f'Cliente com email {email} removido com sucesso.')
+            else:
+                funcionario = getinfo().get_funcionario(email)
+                if funcionario:
+                    self.cursor.execute('DELETE FROM funcionarios WHERE email = ?', (email,))
+                    self.commit()
+                    print(f'Funcionário com email {email} removido com sucesso.')
+                else:
+                    print(f'Usuário com email {email} não encontrado em clientes nem em funcionários.')
+
+        except sqlite3.OperationalError as e:
+            print(f'Erro ao remover usuário: {e}')
+
+
+    def promover_user(self, email):
+        try:
+            user = getinfo().get_user(email)
+            if user:
+                if user[1] == 'cliente':
+                    self.cursor.execute('DELETE FROM clientes WHERE email = ?', (email,))
+                    self.cursor.execute('INSERT INTO funcionarios (user_type, nome, email, cpf, senha) VALUES (?,?,?,?,?)',('funcionario',user[2],user[3],user[4],user[5]))
+                    self.commit()
+                    print(f'Usuário com email {email} promovido para funcionário com sucesso.')
+                elif user[1] == 'funcionario':
+                    self.cursor.execute('UPDATE funcionarios SET user_type = "adm" WHERE email = ?', (email,))
+                    self.commit()
+                    print(f'Usuário com email {email} promovido para administrador com sucesso.')
+        except sqlite3.OperationalError as e:
+            print(f'Erro ao promover usuário: {e}')
+    
+    def rebaixar_user(self, email):
+        try:
+            user = getinfo().get_user(email)
+            if user:
+                if user[1] == 'funcionario':
+                    self.cursor.execute('DELETE FROM funcionarios WHERE email = ?', (email,))
+                    self.cursor.execute('INSERT INTO clientes (user_type, nome, email, cpf, senha) VALUES (?,?,?,?,?)',('cliente',user[2],user[3],user[4],user[5]))
+                    self.commit()
+                    print(f'Usuário com email {email} rebaixado para cliente com sucesso.')
+                elif user[1] == 'adm':
+                    self.cursor.execute('UPDATE funcionarios SET user_type = "funcionario" WHERE email = ?', (email,))
+                    self.commit()
+                    print(f'Usuário com email {email} rebaixado para funcionário com sucesso.')
+        except sqlite3.OperationalError as e:
+            print(f'Erro ao rebaixar usuário: {e}')
+
 #------------------------------------{Area de carrinho}------------------------------------#
     
     def add_carrinho(self,user_id,produto_id,quantidade):

@@ -46,18 +46,30 @@ def logout():
 def dashboard_c():
     return ctl.render('dashboard_c')
 
+
 @app.route('/dashboard_f', method=['GET', 'POST'])
 def dashboard_f():
     return ctl.render('dashboard_f')
+
 
 @app.route('/produtos', method=['GET', 'POST'])
 def produtos():
     return ctl.render('produtos')
 
+
 @app.route('/carrinho', method=['GET', 'POST'])
 def carrinho():
     return ctl.render('carrinho')
 
+
+@app.route('/vendas', method=['GET', 'POST'])
+def vendas():
+    return ctl.render('vendas')
+
+
+@app.route('/usuarios', method=['GET', 'POST'])
+def usuarios():
+    return ctl.render('usuarios')
 
 
 

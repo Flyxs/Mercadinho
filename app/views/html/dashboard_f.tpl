@@ -1,19 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="static/css/index.css">
-    <script src="../../static/js/index.js"></script>
+    <!-- <link rel="stylesheet" type="text/css" href="static/css/index.css">
+    <script src="../../static/js/index.js"></script> -->
     <title>Home</title>
 </head>
 
 <body>
-    <h1>{{user[2]}}</h1>
-    <br>
-    <form action="/logout" method="POST">
-        <button type="submit" aria-label="Sair da sessão">Sair</button>
-    </form>
+    <div class="logout">
+        <form action="/logout" method="POST">
+            <button type="submit" aria-label="Sair da sessão">Sair</button>
+        </form>
+    </div>
     
+    
+    <div class="nome">
+        <h1>{{user[2]}}</h1>
+    </div>
+
+    <div class="acoes">
+        % if user[1] == 'adm':
+            <div class="adm">
+                <form action="/usuarios" method="GET">
+                    <button type="submit" aria-label="Gerenciar usuarios">Gerenciar usuários</button>
+                </form>
+                <form action="/vendas" method="GET">
+                    <button type="submit" aria-label="Consultar vendas">Consultar vendas</button>
+                </form>
+            </div>
+        % end
+        <div class="funcionario">
+            <form action="/produtos" method="GET">
+                <button type="submit" aria-label="Gerenciar produtos">Gerenciar Produtos</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

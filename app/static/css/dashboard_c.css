@@ -1,0 +1,71 @@
+.botoes {
+    border: 2px solid limegreen;
+    padding: 20px;
+    background-color: #28a745;
+    border-radius: 8px;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+    margin-left: 0px;
+    margin-right: 0px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Estilo dos botões */
+.logout, .produtos {
+    display: flex;
+    align-items: center;
+}
+
+/* Outros estilos */
+.Nome {
+    margin-top: 80px;
+}
+
+.carrinho {
+    margin-top: 20px;
+}
+
+.total {
+    margin-top: 20px;
+}
+
+.botoes-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+/* Adicionando um estilo aos botões dentro da caixa */
+button {
+    max-width: 200px;
+    padding: 10px;
+    box-sizing: border-box;
+    border: none;
+    background-color: green;  /* Cor de fundo dos botões */
+    color: white;
+    border-radius: 5px;  /* Bordas arredondadas nos botões */
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;  /* Cor de fundo ao passar o mouse */
+}
+
+
+
+
+
+/* 📌 Estiliza cada produto individualmente */
+.produto {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
