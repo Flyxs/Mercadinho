@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link rel="stylesheet" type="text/css" href="static/css/index.css">
-    <script src="../../static/js/index.js"></script> -->
-    <title>Home</title>
+    <link rel="stylesheet" type="text/css" href="static/css/dashboard_f.css">
+    <script src="../../static/js/dashboard_f.js"></script>
+    <title>{{user[1]}}</title>
 </head>
 
 <body>
@@ -18,6 +18,7 @@
     
     <div class="nome">
         <h1>{{user[2]}}</h1>
+        <h3>{{user[3]}}</h3>
     </div>
 
     <div class="acoes">

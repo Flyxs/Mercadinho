@@ -191,7 +191,10 @@ class Application():
             return redirect('/login')
         
         else:
+            produto_id = request.forms.get('produto_id')
+            quantidade = request.forms.get('quantidade')            
             produtos = getinfo().get_all_produtos()
+            
             if user[1] == 'cliente':
                 if request.method == 'GET':
                     print('\n metodo GET encontrado \n')
@@ -203,8 +206,7 @@ class Application():
                 elif request.method == 'POST':
                     print('\n metodo POST encontrado \n')
 
-                    produto_id = request.forms.get('produto_id')
-                    quantidade = request.forms.get('quantidade')
+
                     print('\n produto_id: ', produto_id)
                     print('quantidade: ', quantidade, '\n')
                     
@@ -256,13 +258,16 @@ class Application():
                         
 
                     elif nome:
+                        print('adicionando produto')
                         preco_compra = float(request.forms.get('preco_compra'))
+                        print('preco_compra: ',preco_compra)
                         preco_venda = float(request.forms.get('preco_venda'))
+                        print('preco_venda: ',preco_venda)
                         categoria = int(request.forms.get('tipo'))
+                        print('categoria: ',categoria)
                         
-                        print(nome, preco_compra, preco_venda, categoria)
                         
-                        if nome and preco_compra and preco_venda and categoria:
+                        if nome and preco_compra and preco_venda:
                             print('adicionando produto')
                             addinfo().add_produto_novo(nome, preco_venda, preco_compra, categoria)
                             print('produto adicionado')

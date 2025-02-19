@@ -1,71 +1,144 @@
+/* 📌 Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* 📌 Cabeçalho com botões */
 .botoes {
     border: 2px solid limegreen;
     padding: 20px;
     background-color: #28a745;
     border-radius: 8px;
     box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
-    margin-left: 0px;
-    margin-right: 0px;
+    width: 100%;
+    max-width: 800px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
     box-sizing: border-box;
 }
 
-/* Estilo dos botões */
-.logout, .produtos {
-    display: flex;
-    align-items: center;
+.botoes form {
+    margin: 0;
 }
 
-/* Outros estilos */
-.Nome {
-    margin-top: 80px;
-}
-
-.carrinho {
-    margin-top: 20px;
-}
-
-.total {
-    margin-top: 20px;
-}
-
-.botoes-container {
-    margin-top: 20px;
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-}
-
-/* Adicionando um estilo aos botões dentro da caixa */
+/* 📌 Estiliza os botões */
 button {
-    max-width: 200px;
-    padding: 10px;
-    box-sizing: border-box;
+    padding: 10px 15px;
+    font-size: 16px;
     border: none;
-    background-color: green;  /* Cor de fundo dos botões */
-    color: white;
-    border-radius: 5px;  /* Bordas arredondadas nos botões */
     cursor: pointer;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
     transition: background-color 0.3s;
 }
 
-button:hover {
-    background-color: #0056b3;  /* Cor de fundo ao passar o mouse */
+/* Botões específicos */
+.logout button {
+    background-color: red;
 }
 
+.logout button:hover {
+    background-color: darkred;
+}
 
+.produtos button {
+    background-color: green;
+}
 
+.produtos button:hover {
+    background-color: darkgreen;
+}
 
+/* 📌 Nome do usuário */
+.Nome {
+    margin-top: 20px;
+}
 
-/* 📌 Estiliza cada produto individualmente */
-.produto {
+/* 📌 Carrinho */
+.carrinho {
+    width: 100%;
+    max-width: 800px;
+    margin-top: 20px;
+    background-color: rgba(245, 245, 220, 0.8);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.produtos {
     border: 1px solid #ccc;
     padding: 15px;
     margin: 10px 0;
     border-radius: 5px;
-    background-color: #fff;
+    background-color: white;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
 }
+
+.produtos h3 {
+    color: #007bff;
+}
+
+/* 📌 Total a pagar */
+.total {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* 📌 Botões de ação */
+.botoes-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 800px;
+}
+
+/* Botão de confirmar compra */
+.confirmar_compra button {
+    background-color: #28a745;
+}
+
+.confirmar_compra button:hover {
+    background-color: #1e7e34;
+}
+
+/* Botão de cancelar carrinho */
+.cancelar_carrinho button {
+    background-color: #dc3545;
+}
+
+.cancelar_carrinho button:hover {
+    background-color: #a71d2a;
+}
+
+/* 📌 Responsividade */
+@media (max-width: 600px) {
+    .botoes {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .botoes-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+

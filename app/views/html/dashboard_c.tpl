@@ -4,30 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="static/css/dashboard_c.css">
-    <script src="../../static/js/dasboard_c.js"></script>
+    <script src="static/js/dashboard_c.js" defer></script>
     <title>Home</title>
 </head>
 
 <body>
 
+    <!-- 📌 Barra de botões superiores -->
     <div class="botoes">
         <div class="logout">
             <form action="/logout" method="POST">
                 <button type="submit" aria-label="Sair da sessão">Sair</button>
             </form>
         </div>
-        <div class="produtos"></div>
+        <div class="produtos">
             <form action="/produtos" method="GET">
                 <button type="submit" aria-label="Ir para produtos">Produtos</button>
             </form>
         </div>
     </div>
 
-    
+    <!-- 📌 Nome do usuário -->
     <div class="Nome">
-        <h1>{{user[2]}}</h1>
+        <h1>{{ user[2] }}</h1>
+        <h3>{{ user[3] }}</h3>
     </div>
 
+    <!-- 📌 Carrinho de compras -->
     <div class="carrinho">
         % if not carrinho:
             <p>{{ mensagem }}</p>
@@ -48,16 +51,17 @@
                             <button type="submit">Cancelar</button>
                         </form>
                     </div>
-
                 </div>
             % end
         % end
     </div>
 
+    <!-- 📌 Total -->
     <div class="total">
         <h2>Total a pagar: R${{ total }}</h2>
     </div>
 
+    <!-- 📌 Botões de ação -->
     <div class="botoes-container">
         % if carrinho:
             <div class="confirmar_compra">  
@@ -75,7 +79,6 @@
             </div>
         % end
     </div>
-
 
 </body>
 </html>

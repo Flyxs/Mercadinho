@@ -8,15 +8,31 @@
     <title>Produtos</title>
 </head>
 <body>
+    
 
-    <h1>Produtos</h1>
+    %if user[1] == 'cliente':
+    <div class="voltar">
+        <form action="/dashboard_c" method="GET">
+            <button type="submit" aria-label="Voltar para o dashboard">Voltar</button>
+        </form>
+    </div>
+    %elif user[1] == 'funcionario' or user[1] == 'adm':
+    <div class="voltar">
+        <form action="/dashboard_f" method="GET">
+            <button type="submit" aria-label="Voltar para o dashboard">Voltar</button>
+        </form>
+    </div>
+    %end
+
+    
 
     <div class="produtos_all">
+
+        <h1>Produtos Disponiveis</h1>
+
         % if user[1] == 'cliente':
 
-            <form action="/dashboard_c" method="GET">
-                <button type="submit" aria-label="Voltar para o dashboard">Voltar</button>
-            </form>
+
 
             % if produtos:
                 % for produto in produtos:
@@ -54,13 +70,9 @@
 
         % elif user[1] == 'funcionario' or user[1] == 'adm':
 
-        <form action="/dashboard_f" method="GET">
-            <button type="submit" aria-label="Voltar para o dashboard">Voltar</button>
-        </form>
-
             % if user[1] == 'adm':
 
-                <h3>Adicionar Produto Novo</h3>
+                <h3>Adicionar Novo Produto ao Estoque</h3>
 
                 <div class="adicionar_produto">
                     <form method="post">

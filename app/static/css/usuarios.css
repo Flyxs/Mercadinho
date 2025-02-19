@@ -1,0 +1,130 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+/* 📌 Botões principais */
+.voltar, .show_clientes, .show_funcionarios {
+    margin: 10px;
+}
+
+button {
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+/* Estilização específica dos botões */
+.voltar button {
+    background-color: #007bff;
+}
+
+.voltar button:hover {
+    background-color: #0056b3;
+}
+
+.show_clientes button {
+    background-color: green;
+}
+
+.show_clientes button:hover {
+    background-color: darkgreen;
+}
+
+.show_funcionarios button {
+    background-color: orange;
+}
+
+.show_funcionarios button:hover {
+    background-color: darkorange;
+}
+
+/* 📌 Estrutura de clientes e funcionários */
+.clientes, .funcionarios {
+    width: 100%;
+    max-width: 800px;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.cliente, .funcionario {
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: white;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+/* Botões dentro de cada usuário */
+.botoes_cliente, .botoes_funcionario {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.botoes_cliente button, .botoes_funcionario button {
+    flex: 1;
+    margin: 5px;
+    padding: 8px;
+}
+
+.botoes_cliente button:first-child {
+    background-color: #28a745; /* Verde para promoção */
+}
+
+.botoes_cliente button:first-child:hover {
+    background-color: #1e7e34;
+}
+
+.botoes_cliente button:last-child, 
+.botoes_funcionario button:last-child {
+    background-color: #dc3545; /* Vermelho para exclusão */
+}
+
+.botoes_cliente button:last-child:hover, 
+.botoes_funcionario button:last-child:hover {
+    background-color: #a71d2a;
+}
+
+.botoes_funcionario button:first-child {
+    background-color: #ffc107; /* Amarelo para rebaixar */
+}
+
+.botoes_funcionario button:first-child:hover {
+    background-color: #d39e00;
+}
+
+.botoes_funcionario button:nth-child(2) {
+    background-color: purple; /* Roxo para promoção */
+}
+
+.botoes_funcionario button:nth-child(2):hover {
+    background-color: darkmagenta;
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+    .botoes_cliente, .botoes_funcionario {
+        flex-direction: column;
+    }
+}

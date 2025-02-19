@@ -9,14 +9,14 @@
 
 </head>
 <body>
+    <div class="conteiner">
+        <h1>Bem-vindo à Nossa Plataforma</h1>
+        <p>Escolha uma das opções abaixo para continuar:</p>
 
-    <h1>Bem-vindo à Nossa Plataforma</h1>
-    <p>Escolha uma das opções abaixo para continuar:</p>
-
-    <div class="buttons">
-        <a href="/cadastro" class="btn">Cadastrar-se</a>
-        <a href="/login" class="btn">Entrar</a>
+        <div class="buttons">
+            <a href="/cadastro" class="btn">Cadastrar-se</a>
+            <a href="/login" class="btn">Entrar</a>
+        </div>
     </div>
-
 </body>
 </html>

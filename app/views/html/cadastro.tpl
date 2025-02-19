@@ -3,27 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <title>Cadastro</title>
+    <link rel="stylesheet" type="text/css" href="static/css/cadastro.css">
 </head>
 <body>
-    <h1>Cadastro de Usuário</h1>
 
-    <form method="POST">
+    <div class="voltar">
+        <form action="/" method="get">
+            <button type="submit" aria-label="Voltar para a página inicial">Voltar</button>
+        </form>
+    </div>
+
+    <div class="container">
+        <h1>Cadastro de Usuário</h1>
+
         %if error_message:
-            <p style="color: red; font-weight: bold;">{{ error_message }}</p>
+            <p class="error-message">{{ error_message }}</p>
         %end
-        <label for="nome">Nome:</label>
-        <input type="text" id="nome" name="nome" ><br><br>
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" ><br><br>
+        <form method="POST">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" required>
 
-        <label for="cpf">CPF:</label>
-        <input type="text" id="cpf" name="cpf" ><br><br>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
 
-        <label for="senha">Senha:</label>
-        <input type="password" id="senha" name="senha" ><br><br>
+            <label for="cpf">CPF:</label>
+            <input type="text" id="cpf" name="cpf" required>
 
-        <button type="submit">Cadastrar</button>        
-    </form>
+            <label for="senha">Senha:</label>
+            <input type="password" id="senha" name="senha" required>
+
+            <button type="submit" class="btn">Cadastrar</button>        
+        </form>
+    </div>
 </body>
 </html>
+

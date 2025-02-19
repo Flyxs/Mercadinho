@@ -3,24 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/css/login.css">
 </head>
 <body>
-    <h2>Login</h2>
-    
-    <form action="/login" method="post">
 
-        % if error_message:
-            <p style="color:red;">{{error_message}}</p>
-        % end
+    <div class="voltar">
+        <form action="/" method="get">
+            <button type="submit" aria-label="Voltar para a página inicial">Voltar</button>
+        </form>
+    </div>
 
-        <label>Email:</label>
-        <input type="email" id="email" name="email" required>
-        <br>
-        <label>Senha:</label>
-        <input type="password" name="senha" required>
-        <br>
-        <input type="submit" value="Entrar">
-    </form>
+    <div class="container">
+        <h1>Login</h1>
+        
+
+        <form action="/login" method="post">
+
+            % if error_message:
+                <p class="error-message">{{error_message}}</p>
+            % end
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="senha">Senha:</label>
+            <input type="password" id="senha" name="senha" required>
+
+            <div class="buttons">
+                <input type="submit" class="btn" value="Entrar">
+            </div>
+        </form>
+    </div>
 </body>
 </html>

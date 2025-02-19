@@ -1,25 +1,80 @@
-/* 📌 Estiliza a área que contém todos os produtos */
-.produtos_all {
-    border: 2px solid #333;
-    padding: 20px;
-    width: fit-content;
-    background-color: gray;
-    border-radius: 8px;
-    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
-    margin: 20px auto; /* Centraliza na tela */
+/* 📌 Reset de estilos básicos */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* 📌 Estiliza cada produto individualmente */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* 📌 Botão de Voltar */
+.voltar {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+.voltar button {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 15px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+}
+
+.voltar button:hover {
+    background-color: #1e7e34;
+}
+
+/* 📌 Container principal dos produtos */
+.produtos_all {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 800px;
+    margin-top: 50px;
+}
+
+.produtos_all h1 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* 📌 Estiliza cada produto */
 .produto {
     border: 1px solid #ccc;
     padding: 15px;
-    margin: 10px 0;
+    margin: 15px 0;
     border-radius: 5px;
     background-color: #fff;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* 📌 Botões de incrementar e decrementar */
+.produto h2 {
+    color: #007bff;
+}
+
+.produto p {
+    font-size: 14px;
+    color: #555;
+}
+
+/* 📌 Estiliza os botões */
 button {
     padding: 8px 12px;
     margin: 5px;
@@ -30,13 +85,18 @@ button {
     transition: background 0.2s ease-in-out;
 }
 
-/* 📌 Botão de adicionar ao carrinho */
+/* 📌 Botão de adicionar */
 button[type="submit"] {
     background-color: #28a745;
     color: white;
     font-weight: bold;
 }
 
+button[type="submit"]:hover {
+    background-color: #1e7e34;
+}
+
+/* 📌 Botões de incremento/decremento */
 button.incrementar {
     background-color: #007bff;
     color: white;
@@ -55,7 +115,7 @@ button.decrementar:hover {
     background-color: #a71d2a;
 }
 
-/* 📌 Estiliza o número da quantidade */
+/* 📌 Estiliza a quantidade */
 span[id^="quantidade_"] {
     display: inline-block;
     padding: 5px 10px;
@@ -65,4 +125,49 @@ span[id^="quantidade_"] {
     border-radius: 4px;
     font-weight: bold;
     border: 1px solid #ccc;
+}
+
+/* 📌 Estiliza a área de adicionar novo produto */
+.adicionar_produto {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.adicionar_produto form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.adicionar_produto input,
+.adicionar_produto select {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.adicionar_produto button {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+.adicionar_produto button:hover {
+    background-color: #0056b3;
+}
+
+/* 📌 Responsividade */
+@media (max-width: 600px) {
+    .produtos_all {
+        width: 95%;
+    }
+
+    .voltar button {
+        font-size: 14px;
+        padding: 8px 12px;
+    }
 }

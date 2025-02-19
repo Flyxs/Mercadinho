@@ -12,11 +12,11 @@ body {
     flex-direction: column;
 }
 
-/* 📌 Caixa centralizada para os botões */
-.conteiner {
+/* 📌 Caixa centralizada para os botões e formulários */
+.container {
     border: 2px solid #333;
-    padding: 20px;
-    width: fit-content;
+    padding: 30px;
+    width: 350px;
     background-color: rgba(245, 245, 220, 0.596);
     border-radius: 8px;
     box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
@@ -24,6 +24,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
 }
 
 /* 📌 Título principal */
@@ -34,9 +35,39 @@ h1 {
 
 /* 📌 Texto explicativo */
 p {
-    color: black;
+    color: #fff;
     font-size: 16px;
-    margin-top: 10;
+    margin-top: 0;
+}
+
+/* 📌 Formulário */
+form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+label {
+    text-align: left;
+    width: 100%;
+    margin-top: 10px;
+    margin-right: 5px;
+    color: black;
+    font-weight: bold;
+}
+
+input {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* 📌 Mensagem de erro */
+.error-message {
+    color: red;
+    font-weight: bold;
 }
 
 /* 📌 Botões */
@@ -55,6 +86,7 @@ p {
     transition: background 0.2s ease-in-out;
     border: none;
     cursor: pointer;
+    width: 100%;
 }
 
 /* 📌 Estiliza os botões de ação */
@@ -73,5 +105,30 @@ p {
 }
 
 .btn:last-child:hover {
+    background-color: #1e7e34;
+}
+
+/* 📌 Botão de Voltar no canto superior esquerdo */
+.voltar {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+/* 📌 Estilizando o botão */
+.voltar button {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 15px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+}
+
+/* 📌 Efeito ao passar o mouse */
+.voltar button:hover {
     background-color: #1e7e34;
 }
