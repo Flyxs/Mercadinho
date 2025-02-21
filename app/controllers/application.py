@@ -1,6 +1,12 @@
-from bottle import template, request, redirect, response
+from bottle import Bottle, template, request, redirect, response, static_file
+import socketio
+import eventlet
+
 from app.models.usuario import funcionario, cliente
 from app.controllers.database import addinfo, getinfo
+
+
+
 
 class Application():
 

@@ -2,6 +2,9 @@ import sqlite3
 from datetime import datetime, timedelta
 import uuid
 from bottle import response, request
+import socketio
+
+sio = socketio.Server(cors_allowed_origins="*")
     
 data_atual = datetime.today().strftime('%d-%m-%Y')
 hora_atual = datetime.now().strftime('%H:%M:%S')
@@ -302,6 +305,11 @@ class addinfo(database):
             qtd = qtd + quantidade
             self.cursor.execute('UPDATE produtos SET quantidade = ? WHERE id = ?',(qtd,id))
             self.commit()
+            
+            sio.emit('atualizar_estoque', {
+                'produto_id': id,
+                'quantidade': qtd
+            })
         except sqlite3.OperationalError:
             print('Erro ao adicionar produto')
             
@@ -311,6 +319,14 @@ class addinfo(database):
             if quantidade > 0:
                 self.cursor.execute('UPDATE produtos SET quantidade = quantidade - ? WHERE id = ?', (quantidade, id))
                 self.commit()
+                produto = getinfo().get_produtos(id)
+                nova_quantidade = produto[4] - quantidade
+                
+                sio.emit('atualizar_estoque', {
+                    'produto_id': id,
+                    'quantidade': nova_quantidade
+                })
+                
         except sqlite3.OperationalError:
             print('Erro ao remover produto')
             

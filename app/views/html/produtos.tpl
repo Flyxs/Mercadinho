@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="/static/css/produtos.css">
-    <script src="/static/js/produtos.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+
     <title>Produtos</title>
 </head>
 <body>
@@ -55,7 +56,7 @@
                                 <form method="post" action="/produtos">
                                     <input type="hidden" name="produto_id" value="{{ produto[0] }}">
                                     <input type="hidden" id="input_quantidade_{{ produto[0] }}" name="quantidade" value="0">
-                                    <button type="submit">Adicionar ao Carrinho</button>
+                                    <button type="submit" id="atualizarEstoque">Adicionar ao Carrinho</button>
                                 </form>
                                 
                             </div>
@@ -116,7 +117,7 @@
                         <form method="post" action="/produtos">
                             <input type="hidden" name="produto_id" value="{{ produto[0] }}">
                             <input type="hidden" id="input_quantidade_{{ produto[0] }}" name="quantidade" value="0">
-                            <button type="submit">Comprar Produtos</button> 
+                            <button type="submit" id="atualizarEstoque">Comprar Produtos</button> 
                         </form>
                         % if user[1] == 'adm':
                             <form method="post" action="/produtos">
@@ -135,6 +136,6 @@
     </div>
 
 
-
+    <script src="/static/js/produtos.js"></script>
 </body>
 </html>

@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  mercadinho:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/bmeta
+    command: ["python3", "startserver.py"]
+    environment:
+      - DATABASE_URL=postgresql://mercadinho_user:mercadinho_pass@db:5432/mercadinho_db
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: mercadinho_db
+      POSTGRES_USER: mercadinho_user
+      POSTGRES_PASSWORD: mercadinho_pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
